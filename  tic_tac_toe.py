@@ -13,6 +13,8 @@ screen.fill((0, 0, 0))
 win_player = 0
 win_bot = 0
 menu = True
+pvp = False
+queue = 0
 
 end = False
 data = [['', '', ''],
@@ -31,15 +33,11 @@ def draw_menu(scr):
     pygame.draw.rect(scr, (20, 20, 20), (105, 140, 95, 55))
     font_bot = pygame.font.Font(None, 50)
     text_bot = font_bot.render('PvE', False, (200, 100, 100))
-    # 98 134
-    # 197 182
     scr.blit(text_bot, (120, 150))
 
     pygame.draw.rect(scr, (20, 20, 20), (105, 220, 95, 55))
     font_5 = pygame.font.Font(None, 50)
     text_5 = font_5.render('PvP', False, (100, 100, 200))
-    # 104 218
-    # 194 262
     scr.blit(text_5, (120, 230))
 
 
@@ -74,11 +72,8 @@ def draw_play(scr, value):
                 pygame.draw.line(scr, (175, 175, 255), (j * 100 + 95, i * 100 + 5), (j * 100 + 5, i * 100 + 95), 5)
 
 
-def raise_the_flag(data, player):
+def raise_the_flag(data, player):  # проверка на победу
     flag = False
-    # for line in data:
-    #     if line.count(player) == 3:
-    #         flag = True
     for i in range(3):
         if data[i][0] == data[i][1] == data[i][2] == player:
             flag = True
@@ -103,13 +98,15 @@ while run:
             print(pos)
             print(pos[0], pos[1])
             print(move)
-            if menu:
-                if 105 <= pos[0] <= 200 and 140 <= pos[1] <= 195:
+            if menu:  # выход из меню
+                if 105 <= pos[0] <= 200 and 140 <= pos[1] <= 195 or 105 <= pos[0] <= 200 and 220 <= pos[1] <= 275:
                     screen.fill((0, 0, 0))
                     menu = False
+                    if 105 <= pos[0] <= 200 and 220 <= pos[1] <= 275:
+                        pvp = True
 
-            elif pos[0] <= 150 and pos[1] >= 300 and not menu:
-                pygame.display.set_caption(' : '.join([str(win_player), str(win_bot)]))
+            elif pos[0] <= 150 and pos[1] >= 300 and not menu:  # кнопка "Clear"
+                pygame.display.set_caption(' : '.join([str(win_player), str(win_bot)]))  # изменяет очки при нажатии
                 screen.fill((0, 0, 0))
                 end = False
                 data = [['', '', ''],
@@ -119,13 +116,41 @@ while run:
                         [1, 0], [1, 1], [1, 2],
                         [2, 0], [2, 1], [2, 2]]
                 draw_grid(screen)
+                queue = 0
 
             elif pos[0] > 150 and pos[1] >= 300 and not menu:
                 screen.fill((0, 0, 0))
                 draw_menu(screen)
                 menu = True
+                pvp = False
 
-            elif not end and not menu:
+            elif not end and pvp:
+                if data[pos[1] // 100][pos[0] // 100] == '':
+                    if queue % 2 == 0:
+                        data[pos[1] // 100][pos[0] // 100] = 'X'
+                    else:
+                        data[pos[1] // 100][pos[0] // 100] = 'O'
+                    queue += 1
+                    draw_play(screen, data)
+                cross_win = raise_the_flag(data, 'X')
+                if cross_win:
+                    pygame.display.set_caption('Крестики выиграли')
+                    end = True
+                    win_player += 1
+                    # print('Крестики выиграли')
+                zero_win = raise_the_flag(data, 'O')
+                if zero_win:
+                    pygame.display.set_caption('Нолики выиграли')
+                    end = True
+                    win_bot += 1
+                    # print('Нолики выиграли')
+
+                ###
+                if len(move) == 0 and not (cross_win or zero_win):  # Так и не достиг....
+                    pygame.display.set_caption('Ничья')
+                    end = True
+
+            elif not end and not menu and not pvp:
                 if data[pos[1] // 100][pos[0] // 100] == '':
                     data[pos[1] // 100][pos[0] // 100] = 'X'
                 draw_play(screen, data)
