@@ -168,9 +168,15 @@ while run:
                     elif (data[0][0] == data[0][2] != '' or data[1][1] == data[2][1] != '') and data[0][1] == '':
                         data[0][1] = 'O'
                         move.remove([0, 1])
-                    elif (data[0][1] == data[1][1] != '' or data[2][0] == data[2][2] != '') and data [2][1] == '':
+                    elif (data[0][1] == data[1][1] != '' or data[2][0] == data[2][2] != '') and data[2][1] == '':
                         data[2][1] = 'O'
                         move.remove([2, 1])
+                    elif (data[1][0] == data[1][1] != '' or data[0][2] == data[2][2] != '') and data[1][2] == '':
+                        data[1][2] = 'O'
+                        move.remove([1, 2])
+                    elif (data[0][0] == data[2][0] != '' or data[1][1] == data[1][2] != '') and data[1][0] == '':
+                        data[1][0] = 'O'
+                        move.remove([1, 0])
                     else:
                         tim = random.choice(move)
                         data[tim[0]][tim[1]] = 'O'
