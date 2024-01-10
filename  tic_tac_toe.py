@@ -95,9 +95,8 @@ while run:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
-            print(pos)
-            print(pos[0], pos[1])
-            print(move)
+            # print(pos)
+            # print(pos[0], pos[1])
             if menu:  # выход из меню
                 if 105 <= pos[0] <= 200 and 140 <= pos[1] <= 195 or 105 <= pos[0] <= 200 and 220 <= pos[1] <= 275:
                     screen.fill((0, 0, 0))
@@ -170,39 +169,31 @@ while run:
 
                 # ход бота
                 if not end and len(move) != 0:
-                    if (data[1][1] == data[2][2] != '' or data[0][1] == data[0][2] != '' or data[1][0] == data[2][0]
-                        != '') and data[0][0] == '':
-                        data[0][0] = 'O'
-                        move.remove([0, 0])
-                    elif (data[0][0] == data[1][1] != '' or data[2][0] == data[2][1] != '' or data[0][2] == data[1][2]
-                          != '') and data[2][2] == '':
-                        data[2][2] = 'O'
-                        move.remove([2, 2])
-                    elif (data[0][0] == data[1][0] != '' or data[2][1] == data[2][2] != '' or data[1][1] == data[0][2]
-                          != '') and data[2][0] == '':
-                        data[2][0] = 'O'
-                        move.remove([2, 0])
-                    elif (data[0][0] == data[0][1] != '' or data[1][2] == data[2][2] != '' or data[2][0] == data[1][1]
-                          != '') and data[0][2] == '':
-                        data[0][2] = 'O'
-                        move.remove([0, 2])
-                    elif (data[0][0] == data[2][2] != '' or data[0][1] == data[2][1] != '' or data[0][2] == data[2][0]
-                          != '' or data[1][0] == data[1][2] != '') and data[1][1] == '':
-                        data[1][1] = 'O'
-                        move.remove([1, 1])
-                    elif (data[0][0] == data[0][2] != '' or data[1][1] == data[2][1] != '') and data[0][1] == '':
-                        data[0][1] = 'O'
-                        move.remove([0, 1])
-                    elif (data[0][1] == data[1][1] != '' or data[2][0] == data[2][2] != '') and data[2][1] == '':
-                        data[2][1] = 'O'
-                        move.remove([2, 1])
-                    elif (data[1][0] == data[1][1] != '' or data[0][2] == data[2][2] != '') and data[1][2] == '':
-                        data[1][2] = 'O'
-                        move.remove([1, 2])
-                    elif (data[0][0] == data[2][0] != '' or data[1][1] == data[1][2] != '') and data[1][0] == '':
-                        data[1][0] = 'O'
-                        move.remove([1, 0])
-                    else:
+                    flag_break = False
+                    for t in range(2):
+                        for i in range(3):
+                            for j in range(3):
+                                if flag_break:
+                                    break
+                                if data[i][j] == '':
+                                    if t == 0:
+                                        data[i][j] = 'O'
+                                        if raise_the_flag(data, 'O'):
+                                            data[i][j] = 'O'
+                                            move.remove([i, j])
+                                            flag_break = True
+                                        else:
+                                            data[i][j] = ''
+                                    if t == 1:
+                                        data[i][j] = 'X'
+                                        if raise_the_flag(data, 'X'):
+                                            data[i][j] = 'O'
+                                            move.remove([i, j])
+                                            flag_break = True
+                                        else:
+                                            data[i][j] = ''
+
+                    if not flag_break:
                         tim = random.choice(move)
                         data[tim[0]][tim[1]] = 'O'
                         move.remove(tim)
@@ -215,7 +206,7 @@ while run:
                     print('победа бота')
 
                 ###
-                if len(move) == 0 and not (cross_win or zero_win):  # Так и не достиг....
+                if len(move) == 0 and not (cross_win or zero_win):
                     pygame.display.set_caption('Ничья')
                     end = True
                 print(move)
