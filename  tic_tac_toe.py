@@ -145,71 +145,71 @@ while run:
                     # print('Нолики выиграли')
 
                 ###
-                if len(move) == 0 and not (cross_win or zero_win):  # Так и не достиг....
+                if len(move) == 0 and not (cross_win or zero_win):
                     pygame.display.set_caption('Ничья')
                     end = True
 
             elif not end and not menu and not pvp:
                 if data[pos[1] // 100][pos[0] // 100] == '':
                     data[pos[1] // 100][pos[0] // 100] = 'X'
-                draw_play(screen, data)
-                # проверка на значение
-                for elem in move:
-                    # print(elem)
-                    if data[elem[0]][elem[1]] == 'X':
-                        # print('падение')
-                        move.remove(elem)
+                    draw_play(screen, data)
+                    # проверка на значение
+                    for elem in move:
+                        # print(elem)
+                        if data[elem[0]][elem[1]] == 'X':
+                            # print('падение')
+                            move.remove(elem)
 
-                cross_win = raise_the_flag(data, 'X')
-                if cross_win:
-                    pygame.display.set_caption('Вы победили')
-                    end = True
-                    win_player += 1
-                    print('победа человека')
+                    cross_win = raise_the_flag(data, 'X')
+                    if cross_win:
+                        pygame.display.set_caption('Вы победили')
+                        end = True
+                        win_player += 1
+                        print('победа человека')
 
-                # ход бота
-                if not end and len(move) != 0:
-                    flag_break = False
-                    for t in range(2):
-                        for i in range(3):
-                            for j in range(3):
-                                if flag_break:
-                                    break
-                                if data[i][j] == '':
-                                    if t == 0:
-                                        data[i][j] = 'O'
-                                        if raise_the_flag(data, 'O'):
+                    # ход бота
+                    if not end and len(move) != 0:
+                        flag_break = False
+                        for t in range(2):
+                            for i in range(3):
+                                for j in range(3):
+                                    if flag_break:
+                                        break
+                                    if data[i][j] == '':
+                                        if t == 0:
                                             data[i][j] = 'O'
-                                            move.remove([i, j])
-                                            flag_break = True
-                                        else:
-                                            data[i][j] = ''
-                                    if t == 1:
-                                        data[i][j] = 'X'
-                                        if raise_the_flag(data, 'X'):
-                                            data[i][j] = 'O'
-                                            move.remove([i, j])
-                                            flag_break = True
-                                        else:
-                                            data[i][j] = ''
+                                            if raise_the_flag(data, 'O'):
+                                                data[i][j] = 'O'
+                                                move.remove([i, j])
+                                                flag_break = True
+                                            else:
+                                                data[i][j] = ''
+                                        if t == 1:
+                                            data[i][j] = 'X'
+                                            if raise_the_flag(data, 'X'):
+                                                data[i][j] = 'O'
+                                                move.remove([i, j])
+                                                flag_break = True
+                                            else:
+                                                data[i][j] = ''
 
-                    if not flag_break:
-                        tim = random.choice(move)
-                        data[tim[0]][tim[1]] = 'O'
-                        move.remove(tim)
-                ###
-                zero_win = raise_the_flag(data, 'O')
-                if zero_win:
-                    pygame.display.set_caption('Компьютер победил')  # С запазданием на ход пишет победу
-                    end = True
-                    win_bot += 1
-                    print('победа бота')
+                        if not flag_break:
+                            tim = random.choice(move)
+                            data[tim[0]][tim[1]] = 'O'
+                            move.remove(tim)
+                    ###
+                    zero_win = raise_the_flag(data, 'O')
+                    if zero_win:
+                        pygame.display.set_caption('Компьютер победил')  # С запазданием на ход пишет победу
+                        end = True
+                        win_bot += 1
+                        print('победа бота')
 
-                ###
-                if len(move) == 0 and not (cross_win or zero_win):
-                    pygame.display.set_caption('Ничья')
-                    end = True
-                print(move)
+                    ###
+                    if len(move) == 0 and not (cross_win or zero_win):
+                        pygame.display.set_caption('Ничья')
+                        end = True
+                    print(move)
         if menu:
             draw_menu(screen)
         else:
